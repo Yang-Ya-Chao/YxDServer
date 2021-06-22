@@ -29,7 +29,7 @@ del /s *.mes
 del /s *.~*
 del /s *.dll
 
-rd /s /Q YxCisSvrlog
+rd /s /Q YxDServerlog
 rd /s /Q __history
 rd /s /Q __recovery
 rd /s /Q WEB\__history

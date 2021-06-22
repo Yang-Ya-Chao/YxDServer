@@ -175,13 +175,13 @@
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <Deployment Version="3">
-                <DeployFile LocalName="YxDServer.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="\YxDServer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>YxDServer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="\YxDServer.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="YxDServer.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>YxDServer.exe</RemoteName>
                         <Overwrite>true</Overwrite>

@@ -1520,7 +1520,7 @@ begin
   Result := False;
   OutValue := '';
   try
-    YxDSvr := TYxDSvr.Create;
+    YxDSvr := TYxDSvr.Create(nil);
     try
       with  YxDSvr do
       begin

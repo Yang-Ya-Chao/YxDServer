@@ -6,7 +6,9 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, AppEvnts, StdCtrls, HTTPApp, System.IniFiles, Winapi.ShellAPI,
   SynWebServer, Vcl.ExtCtrls, Vcl.Menus, uEncry, UpubFun,qlog,
-  Vcl.Buttons, uFrmSvrConfig, Registry;
+  Vcl.Buttons, uFrmSvrConfig, Registry, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Phys, FireDAC.Comp.Client;
 
 const
   WM_BARICON = WM_USER + 200;
@@ -30,6 +32,7 @@ type
     btnStart: TBitBtn;
     btnStop: TBitBtn;
     tmr2: TTimer;
+    Mag1: TFDManager;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
@@ -44,6 +47,8 @@ type
   private
     //是否开启接口日志
     BDEBUG: Boolean;
+    //firedac连接池
+    oParams: TStrings;
     //日志文件分页大小
     LogSize: integer;
     //服务接收到的请求数量、成功数、失败数、工作总线程数、当前工作线程数
@@ -77,7 +82,7 @@ type
     //服务线程数
     procedure MSG_GetHTTPCount(var message: TMessage); message WM_HTTPCOUNT;
     //设置连接池
-    //procedure SetDACManager;
+    procedure SetDACManager;
 
     { Private declarations }
   public
@@ -90,45 +95,45 @@ var
 implementation
 
 {$R *.dfm}
-//procedure TMainForm.SetDACManager;
-//var
-//  DBServer,DataBase,UserName,PassWord:string;
-//begin
-//   //读取数据库配置
-//    DBServer := DeCode(AINI.ReadString('DB', 'Server', ''));
-//    DataBase := DeCode(AINI.ReadString('DB', 'DataBase', ''));
-//    UserName := DeCode(AINI.ReadString('DB', 'UserName', ''));
-//    PassWord := DeCode(AINI.ReadString('DB', 'PassWord', ''));
-//    //*****初始化*****
-//    oParams := TStringList.Create;
-//    //********* 连接池
-//    oParams.Add('DriverID=MSSQL');
-//    oParams.Add('CharacterSet=utf8');
-//    oParams.Add('Server='+DBServer);
-//    oParams.Add('Port=1433');
-//    oParams.Add('Database='+DataBase);
-//    oParams.Add('User_Name='+UserName);
-//    oParams.Add('Password='+PassWord);
-//    oParams.Add('LoginTimeout=3');
-//    oParams.add('ResourceOptions.CmdExecTimeout=3');
-//    //解决查询只返回50条数据问题
-//    oParams.add('FetchOptions.Mode=fmAll');
-//    //解决！，&等字符插入数据库时丢失
-//    oParams.add('ResourceOptions.MacroCreate=False');
-//    oParams.add('ResourceOptions.MacroExpand=False');
-//    //  毫秒
-//    oParams.Add('POOL_CleanupTimeout=36000');
-//    //  毫秒
-//    oParams.Add('POOL_ExpireTimeout=600000');
-//    //最多连接数
-//    oParams.Add('POOL_MaximumItems=60');
-//    oParams.Add('Pooled=True');
-//    //*******
-//    Mag1.Close;
-//    Mag1.AddConnectionDef('MSSQL_Pooled','MSSQL',oParams);
-//    Mag1.Active := True;
-//
-//end;
+procedure TMainForm.SetDACManager;
+var
+  DBServer,DataBase,UserName,PassWord:string;
+begin
+   //读取数据库配置
+    DBServer := DeCode(AINI.ReadString('DB', 'Server', ''));
+    DataBase := DeCode(AINI.ReadString('DB', 'DataBase', ''));
+    UserName := DeCode(AINI.ReadString('DB', 'UserName', ''));
+    PassWord := DeCode(AINI.ReadString('DB', 'PassWord', ''));
+    //*****初始化*****
+    oParams := TStringList.Create;
+    //********* 连接池
+    oParams.Add('DriverID=MSSQL');
+    oParams.Add('CharacterSet=utf8');
+    oParams.Add('Server='+DBServer);
+    oParams.Add('Port=1433');
+    oParams.Add('Database='+DataBase);
+    oParams.Add('User_Name='+UserName);
+    oParams.Add('Password='+PassWord);
+    oParams.Add('LoginTimeout=3');
+    oParams.add('ResourceOptions.CmdExecTimeout=3');
+    //解决查询只返回50条数据问题
+    oParams.add('FetchOptions.Mode=fmAll');
+    //解决！，&等字符插入数据库时丢失
+    oParams.add('ResourceOptions.MacroCreate=False');
+    oParams.add('ResourceOptions.MacroExpand=False');
+    //  毫秒
+    oParams.Add('POOL_CleanupTimeout=36000');
+    //  毫秒
+    oParams.Add('POOL_ExpireTimeout=600000');
+    //最多连接数
+    oParams.Add('POOL_MaximumItems=60');
+    oParams.Add('Pooled=True');
+    //*******
+    Mag1.Close;
+    Mag1.AddConnectionDef('MSSQL_Pooled','MSSQL',oParams);
+    Mag1.Active := True;
+
+end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -231,7 +236,7 @@ begin
   BeginServer := True;
   BtnStart.Enabled := False;
   BtnStop.Enabled := True;
-  //SetDACManager;
+  SetDACManager;
 end;
 
 procedure TMainForm.StopSvr;

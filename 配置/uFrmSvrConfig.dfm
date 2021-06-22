@@ -3,17 +3,18 @@ object FrmSvrConfig: TFrmSvrConfig
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = #25509#21475#25968#25454#37197#32622
+  Caption = #25509#21475#37197#32622
   ClientHeight = 180
   ClientWidth = 344
   Color = clBtnFace
-  DoubleBuffered = True
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -17
   Font.Name = #23435#20307
   Font.Style = []
+  FormStyle = fsStayOnTop
   OldCreateOrder = False
+  Position = poScreenCenter
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 17
@@ -83,7 +84,7 @@ object FrmSvrConfig: TFrmSvrConfig
     TabOrder = 1
     object lbl1: TLabel
       Left = 15
-      Top = 113
+      Top = 115
       Width = 102
       Height = 17
       Caption = #24037#20316#32447#31243#24635#25968
@@ -98,14 +99,14 @@ object FrmSvrConfig: TFrmSvrConfig
     object lbl3: TLabel
       Left = 140
       Top = 73
-      Width = 129
+      Width = 145
       Height = 17
-      Caption = #26085#24535#20998#39029#22823#23567'(M)'
+      Caption = #26085#24535#20998#39029#22823#23567#65288'M'#65289
     end
     object EdtWorkcount: TEdit
       Left = 140
       Top = 112
-      Width = 146
+      Width = 141
       Height = 25
       NumbersOnly = True
       TabOrder = 0
@@ -150,7 +151,7 @@ object FrmSvrConfig: TFrmSvrConfig
     object EdtReBootT: TEdit
       Left = 140
       Top = 45
-      Width = 146
+      Width = 141
       Height = 25
       Hint = #37325#21551#38388#38548#26102#38388'('#22825')'
       NumbersOnly = True
@@ -183,13 +184,13 @@ object FrmSvrConfig: TFrmSvrConfig
     object EdtPort: TEdit
       Left = 179
       Top = 6
-      Width = 97
+      Width = 102
       Height = 25
       NumbersOnly = True
       TabOrder = 8
     end
     object BtnCheckPort: TBitBtn
-      Left = 283
+      Left = 288
       Top = 6
       Width = 42
       Height = 25
@@ -198,13 +199,23 @@ object FrmSvrConfig: TFrmSvrConfig
       OnClick = BtnCheckPortClick
     end
     object EdtSize: TEdit
-      Left = 275
+      Left = 288
       Top = 71
-      Width = 50
-      Height = 23
+      Width = 42
+      Height = 25
       NumbersOnly = True
       TabOrder = 10
       Text = '10'
+      OnExit = EdtSizeExit
+      OnKeyPress = EdtSizeKeyPress
+    end
+    object ckHTTPS: TCheckBox
+      Left = 216
+      Top = 92
+      Width = 65
+      Height = 17
+      Caption = 'HTTPS'
+      TabOrder = 11
     end
   end
 end

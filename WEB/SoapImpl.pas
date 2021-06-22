@@ -35,7 +35,7 @@ begin
   Result := Fail_Result;
   try
     try
-      Af := TYxDSvr.Create;
+      Af := TYxDSvr.Create(nil);
       try
         if not Af.HelloWorld then
         begin

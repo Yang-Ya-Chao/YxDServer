@@ -158,4 +158,12 @@ object MainForm: TMainForm
     Left = 181
     Top = 64
   end
+  object Mag1: TFDManager
+    FormatOptions.AssignedValues = [fvMapRules]
+    FormatOptions.OwnMapRules = True
+    FormatOptions.MapRules = <>
+    Active = True
+    Left = 209
+    Top = 62
+  end
 end
