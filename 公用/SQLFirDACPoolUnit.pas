@@ -33,7 +33,8 @@ interface
 uses
   Windows, SqlExpr, SysUtils, Classes, ExtCtrls, DateUtils, IniFiles, uEncry,
   Messages, Provider, FireDAC.Comp.Client, FireDAC.Phys.MSSQL,
-  FireDAC.Phys.ODBCBase, FireDAC.DApt;
+  FireDAC.Phys.ODBCBase, FireDAC.DApt,FireDAC.Moni.FlatFile,FireDAC.Stan.Intf,
+  FireDAC.Moni.Base,QLog;
 
 type// 数据库类型
   TDBType = (Access, SqlServer, Oracle);
@@ -52,7 +53,7 @@ type
     PassWord: ansistring; //密码
     AccessPassWord: string; //Access可能需要数据库密码
     Port: integer; //数据库端口
-  //
+    BDEBUG:Boolean; //是否记录sql语句
     DriverName: string; //驱动
     HostName: string; //服务地址
   //端口配置
@@ -69,9 +70,12 @@ type
   TDACon = class
   private
     FConnObj: TFDConnection; //数据库连接对象
+    FMDFF:TFDMoniFlatFileClientLink; //SQL记录对象
     FAStart: TDateTime; //最后一次活动时间
     function GetUseFlag: Boolean;
     procedure SetUseFlag(value: Boolean);
+    procedure FDMFFOutput(ASender: TFDMoniClientLinkBase; const AClassName,
+      AObjName, AMessage: string);
   public
     constructor Create(DAConfig: TDAConfig); overload;
     destructor Destroy; override;
@@ -130,6 +134,7 @@ begin
     UserName := DeCode(AINI.ReadString('DB', 'UserName', ''));
     PassWord := DeCode(AINI.ReadString('DB', 'PassWord', ''));
     PoolNum := AINI.ReadInteger('YxDServer', 'Pools', 32);
+    BDEBUG :=  AINI.ReadBool('YxDServer', 'SQLDEBUG', True);
   finally
     Freeandnil(AINI);
   end;
@@ -142,15 +147,23 @@ begin
 end;
 { tdacon }
 
+procedure TDACon.FDMFFOutput(ASender: TFDMoniClientLinkBase;
+  const AClassName, AObjName, AMessage: string);
+begin
+  PostLog(llDebug,AMessage);
+end;
+
 constructor TDACon.Create(DAConfig: TDAConfig);
 var
   str: string;
+  Path:string;
 begin
   str := 'DriverID=MSSQL;Server=' + DAConfig.DBServer + ';Database=' + DAConfig.DataBase
     + ';User_name=' + DAConfig.UserName + ';Password=' + DAConfig.PassWord +
     ';LoginTimeOut=3';
   FConnObj := TFDConnection.Create(nil);
-  with FConnObj do
+  FMDFF := TFDMoniFlatFileClientLink.Create(nil);
+  with FConnObj,FMDFF do
   begin
     //ConnectionTimeout:=18000;
     ConnectionString := str;
@@ -161,8 +174,23 @@ begin
     //解决！，&等字符插入数据库时丢失
     Params.add('ResourceOptions.MacroCreate=False');
     Params.add('ResourceOptions.MacroExpand=False');
+    //////////SQL日志设置/////////
+    Params.add('MonitorBy=FlatFile');
+    Params.add('ConnectionIntf.Tracing=True');
+    Path := ExtractFileDir(ParamStr(0)) + '\YxDServerSQLlog';
+   { if not DirectoryExists(Path) then
+      CreateDir(Path); }
+    FileName :='';//Path+ '\SQLog'+FormatDateTime('YYYY-MM-DD HH', now)+'.Txt';
+    EventKinds := [ekcmdExecute];
+    FileAppend := True;
+    FileEncoding := ecANSI;
+    ShowTraces := False;
+    OnOutput := nil;
+    OnOutput := FDMFFOutput;
+    ///////////////////////////
     try
       Connected := True;
+      Tracing := DAConfig.BDEBUG;
     except
       raise Exception.Create('数据库连接失败！请检查数据库配置或者网络链接！');
     end;
@@ -177,6 +205,7 @@ begin
     if FConnObj.Connected then
       FConnObj.Close;
     FreeAndnil(FConnObj);
+    FreeAndnil(FMDFF);
   end;
   inherited;
 end;

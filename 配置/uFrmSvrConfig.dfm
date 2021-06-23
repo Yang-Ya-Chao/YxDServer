@@ -4,7 +4,7 @@ object FrmSvrConfig: TFrmSvrConfig
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = #25509#21475#37197#32622
-  ClientHeight = 180
+  ClientHeight = 199
   ClientWidth = 344
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -20,11 +20,13 @@ object FrmSvrConfig: TFrmSvrConfig
   TextHeight = 17
   object pnl2: TPanel
     Left = 0
-    Top = 145
+    Top = 165
     Width = 344
-    Height = 35
+    Height = 34
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 151
+    ExplicitHeight = 40
     object BtnSQL: TBitBtn
       Left = 193
       Top = 6
@@ -47,7 +49,7 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object BtnSave: TBitBtn
       Left = 64
-      Top = 6
+      Top = 3
       Width = 49
       Height = 25
       Caption = #23384#30424
@@ -57,7 +59,7 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object BtnMod: TBitBtn
       Left = 0
-      Top = 6
+      Top = 3
       Width = 49
       Height = 25
       Caption = #20462#25913
@@ -67,7 +69,7 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object BitBtn1: TBitBtn
       Left = 283
-      Top = 6
+      Top = 3
       Width = 55
       Height = 25
       Caption = 'MQTT'
@@ -79,12 +81,12 @@ object FrmSvrConfig: TFrmSvrConfig
     Left = 0
     Top = 0
     Width = 344
-    Height = 145
+    Height = 165
     Align = alTop
     TabOrder = 1
     object lbl1: TLabel
       Left = 15
-      Top = 115
+      Top = 140
       Width = 102
       Height = 17
       Caption = #24037#20316#32447#31243#24635#25968
@@ -97,15 +99,15 @@ object FrmSvrConfig: TFrmSvrConfig
       Caption = #31471#21475
     end
     object lbl3: TLabel
-      Left = 140
-      Top = 73
+      Left = 15
+      Top = 95
       Width = 145
       Height = 17
       Caption = #26085#24535#20998#39029#22823#23567#65288'M'#65289
     end
     object EdtWorkcount: TEdit
       Left = 140
-      Top = 112
+      Top = 137
       Width = 141
       Height = 25
       NumbersOnly = True
@@ -115,7 +117,7 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object rbWEB: TRadioButton
       Left = 15
-      Top = 92
+      Top = 117
       Width = 113
       Height = 17
       Caption = 'WEBSERVICE'
@@ -142,7 +144,7 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object rbHTTP: TRadioButton
       Left = 140
-      Top = 92
+      Top = 117
       Width = 57
       Height = 17
       Caption = 'HTTP'
@@ -199,8 +201,8 @@ object FrmSvrConfig: TFrmSvrConfig
       OnClick = BtnCheckPortClick
     end
     object EdtSize: TEdit
-      Left = 288
-      Top = 71
+      Left = 163
+      Top = 93
       Width = 42
       Height = 25
       NumbersOnly = True
@@ -211,11 +213,19 @@ object FrmSvrConfig: TFrmSvrConfig
     end
     object ckHTTPS: TCheckBox
       Left = 216
-      Top = 92
+      Top = 117
       Width = 65
       Height = 17
       Caption = 'HTTPS'
       TabOrder = 11
+    end
+    object ckSQLDEBUG: TCheckBox
+      Left = 140
+      Top = 71
+      Width = 126
+      Height = 17
+      Caption = #35760#24405'SQL'#26085#24535
+      TabOrder = 12
     end
   end
 end

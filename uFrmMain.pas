@@ -8,7 +8,7 @@ uses
   SynWebServer, Vcl.ExtCtrls, Vcl.Menus, uEncry, UpubFun,qlog,
   Vcl.Buttons, uFrmSvrConfig, Registry, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
-  FireDAC.Phys, FireDAC.Comp.Client;
+  FireDAC.Phys, FireDAC.Comp.Client, FireDAC.Moni.Base, FireDAC.Moni.FlatFile;
 
 const
   WM_BARICON = WM_USER + 200;
@@ -33,6 +33,7 @@ type
     btnStop: TBitBtn;
     tmr2: TTimer;
     Mag1: TFDManager;
+    FDMFFCL1: TFDMoniFlatFileClientLink;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
@@ -44,9 +45,13 @@ type
     procedure N4Click(Sender: TObject);
     procedure tmr1Timer(Sender: TObject);
     procedure tmr2Timer(Sender: TObject);
+    procedure FDMFFCL1Output(ASender: TFDMoniClientLinkBase; const AClassName,
+      AObjName, AMessage: string);
   private
     //是否开启接口日志
     BDEBUG: Boolean;
+    //是否开启接口SQL日志
+    SQLDEBUG:Boolean;
     //firedac连接池
     oParams: TStrings;
     //日志文件分页大小
@@ -97,7 +102,7 @@ implementation
 {$R *.dfm}
 procedure TMainForm.SetDACManager;
 var
-  DBServer,DataBase,UserName,PassWord:string;
+  DBServer,DataBase,UserName,PassWord,Path:string;
 begin
    //读取数据库配置
     DBServer := DeCode(AINI.ReadString('DB', 'Server', ''));
@@ -128,11 +133,13 @@ begin
     //最多连接数
     oParams.Add('POOL_MaximumItems=60');
     oParams.Add('Pooled=True');
+    oParams.Add('MonitorBy=FlatFile');
+    oParams.Add('ConnectionIntf.Tracing=True');
+    FDMFFCL1.Tracing := SQLDEBUG;
     //*******
     Mag1.Close;
     Mag1.AddConnectionDef('MSSQL_Pooled','MSSQL',oParams);
     Mag1.Active := True;
-
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -164,12 +171,19 @@ begin
   IWebActice := 0;
   AINI := TIniFile.Create(ExtractFilePath(ParamStr(0)) + 'YxDServer.ini');
   BDEBUG := AINI.ReadBool('YxDServer', 'DEBUG', False);
+  SQLDEBUG := AINI.ReadBool('YxDServer', 'SQLDEBUG', False);
   LogSize := AINI.ReadInteger('YxDServer', 'LogSize', 10);
   //程序系统菜单添加菜单选项
   appendmenu(GetSystemMenu(Handle, False), MF_SEPARATOR, 0, nil);
   appendmenu(GetSystemMenu(Handle, False), MF_ByPosition + MF_String, 888, '接口配置...');
   //创建系统托盘
   CreateTratIcons(Self);
+end;
+
+procedure TMainForm.FDMFFCL1Output(ASender: TFDMoniClientLinkBase;
+  const AClassName, AObjName, AMessage: string);
+begin
+  PostLog(llDebug,AMessage);
 end;
 
 procedure TMainForm.FormActivate(Sender: TObject);
@@ -236,7 +250,7 @@ begin
   BeginServer := True;
   BtnStart.Enabled := False;
   BtnStop.Enabled := True;
-  SetDACManager;
+  //SetDACManager;
 end;
 
 procedure TMainForm.StopSvr;

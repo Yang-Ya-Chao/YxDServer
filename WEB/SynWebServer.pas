@@ -78,14 +78,14 @@ begin
     else
       FReqHandler := GetRequestHandler;
     FIniFile := TIniFile.Create(ChangeFileExt(ParamStr(0), '.ini'));
-    FRoot := FIniFile.ReadString('YxCisSvr', 'Root', '');
+    FRoot := FIniFile.ReadString('YxDServer', 'Root', '');
     if ParamStr(1) <> '' then
       FPort := ParamStr(1)
     else
-      FPort := FIniFile.ReadString('YxCisSvr', 'Port', '8080');
-    FHttp := FIniFile.ReadBool('YxCisSvr', 'HttpType', False);
-    FMaxNum := FIniFile.ReadInteger('YxCisSvr', 'Pools', 32);
-    FHttpS := FIniFile.ReadBool('YxCisSvr', 'Https', False);
+      FPort := FIniFile.ReadString('YxDServer', 'Port', '8080');
+    FHttp := FIniFile.ReadBool('YxDServer', 'HttpType', False);
+    FMaxNum := FIniFile.ReadInteger('YxDServer', 'Pools', 32);
+    FHttpS := FIniFile.ReadBool('YxDServer', 'Https', False);
     if FHttpS then  FPort := '443';
     FReqHandler.MaxConnections := FMaxNum;
     FHttpServer := THttpApiServer.Create(False);

@@ -164,6 +164,16 @@ object MainForm: TMainForm
     FormatOptions.MapRules = <>
     Active = True
     Left = 209
-    Top = 62
+    Top = 64
+  end
+  object FDMFFCL1: TFDMoniFlatFileClientLink
+    EventKinds = [ekCmdExecute]
+    OnOutput = FDMFFCL1Output
+    FileAppend = True
+    FileColumns = [tiRefNo, tiTime, tiThreadID, tiClassName, tiObjID, tiMsgText]
+    FileEncoding = ecANSI
+    ShowTraces = False
+    Left = 181
+    Top = 37
   end
 end

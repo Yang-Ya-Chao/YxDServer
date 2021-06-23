@@ -32,6 +32,7 @@ type
     lbl3: TLabel;
     EdtSize: TEdit;
     ckHTTPS: TCheckBox;
+    ckSQLDEBUG: TCheckBox;
     procedure EdtWorkcountKeyPress(Sender: TObject; var Key: Char);
     procedure EdtWorkcountExit(Sender: TObject);
     procedure ckReBootClick(Sender: TObject);
@@ -92,20 +93,21 @@ begin
   begin
     Aini := TIniFile.Create(YxSCKTINI);
     try
-      CKRUN.CHECKED := Aini.ReadBool('YxCisSvr', 'Auto', False);
-      CKAUTORUN.CHECKED := Aini.ReadBool('YxCisSvr', 'AutoRun', False);
-      CKREBOOT.CHECKED := Aini.ReadBool('YxCisSvr', 'ReBoot', False);
-      EdtReBootT.text := Aini.ReadString('YxCisSvr', 'ReBootT', '');
-      CKDEBUG.CHECKED := Aini.ReadBool('YxCisSvr', 'DEBUG', False);
-      CKhttps.CHECKED :=  AINI.ReadBool('YxCisSvr', 'Https',False);
-      if Aini.ReadBool('YxCisSvr', 'HttpType', False) then
+      CKRUN.CHECKED := Aini.ReadBool('YxDServer', 'Auto', False);
+      CKAUTORUN.CHECKED := Aini.ReadBool('YxDServer', 'AutoRun', False);
+      CKREBOOT.CHECKED := Aini.ReadBool('YxDServer', 'ReBoot', False);
+      EdtReBootT.text := Aini.ReadString('YxDServer', 'ReBootT', '');
+      CKDEBUG.CHECKED := Aini.ReadBool('YxDServer', 'DEBUG', False);
+      CKSQLDEBUG.CHECKED := Aini.ReadBool('YxDServer', 'SQLDEBUG', False);
+      CKhttps.CHECKED :=  AINI.ReadBool('YxDServer', 'Https',False);
+      if Aini.ReadBool('YxDServer', 'HttpType', False) then
         RbHTTP.CHECKED := True
       else
         RbWEB.CHECKED := True;
-      Aini.ReadString('YxCisSvr', 'ReBootT', '');
-      EdtWorkCount.text := Aini.ReadString('YxCisSvr', 'Pools', '32');
-      EdtPort.Text := Aini.ReadString('YxCisSvr', 'Port', '8080');
-      EdtSize.Text := IntToStr(Aini.ReadInteger('YxCisSvr','LogSize',10));
+      Aini.ReadString('YxDServer', 'ReBootT', '');
+      EdtWorkCount.text := Aini.ReadString('YxDServer', 'Pools', '32');
+      EdtPort.Text := Aini.ReadString('YxDServer', 'Port', '8080');
+      EdtSize.Text := IntToStr(Aini.ReadInteger('YxDServer','LogSize',10));
     finally
       FreeAndNil(Aini);
     end;
@@ -288,19 +290,20 @@ begin
   try
     if (Trim(EdtReBootT.text) = '') then
       EdtReBootT.text := '3';
-    AINI.WriteBool('YxCisSvr', 'Auto', CKRUN.CHECKED);
-    AINI.WriteBool('YxCisSvr', 'AutoRun', CKAUTORUN.CHECKED);
-    AINI.WriteBool('YxCisSvr', 'DEBUG', CKDEBUG.CHECKED);
-    AINI.WriteBool('YxCisSvr', 'HttpType', RbHTTP.CHECKED);
-    AINI.WriteBool('YxCisSvr', 'ReBoot', CKREBOOT.CHECKED);
-    AINI.WriteBool('YxCisSvr', 'Https', CKhttps.CHECKED);
-    AINI.WriteString('YxCisSvr', 'ReBootT', EdtReBootT.text);
-    AINI.WriteString('YxCisSvr', 'Pools', EdtWorkCount.text);
+    AINI.WriteBool('YxDServer', 'Auto', CKRUN.CHECKED);
+    AINI.WriteBool('YxDServer', 'AutoRun', CKAUTORUN.CHECKED);
+    AINI.WriteBool('YxDServer', 'DEBUG', CKDEBUG.CHECKED);
+    AINI.WriteBool('YxDServer', 'SQLDEBUG', CKSQLDEBUG.CHECKED);
+    AINI.WriteBool('YxDServer', 'HttpType', RbHTTP.CHECKED);
+    AINI.WriteBool('YxDServer', 'ReBoot', CKREBOOT.CHECKED);
+    AINI.WriteBool('YxDServer', 'Https', CKhttps.CHECKED);
+    AINI.WriteString('YxDServer', 'ReBootT', EdtReBootT.text);
+    AINI.WriteString('YxDServer', 'Pools', EdtWorkCount.text);
     if Trim(EdtPort.Text) = '' then
-      AINI.WriteString('YxCisSvr', 'Port', '8080')
+      AINI.WriteString('YxDServer', 'Port', '8080')
     else
-      AINI.WriteString('YxCisSvr', 'Port', Trim(EdtPort.Text));
-    AINI.WriteInteger('YxCisSvr','LogSize',StrToIntDef(EdtSize.Text,10));
+      AINI.WriteString('YxDServer', 'Port', Trim(EdtPort.Text));
+    AINI.WriteInteger('YxDServer','LogSize',StrToIntDef(EdtSize.Text,10));
   finally
     FreeAndNil(AINI);
   end;
