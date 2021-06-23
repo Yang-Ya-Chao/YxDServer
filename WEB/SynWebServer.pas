@@ -155,7 +155,7 @@ begin
   PostMessage(Application.MainForm.Handle, WM_HTTPINFO, 0, 0);
   try
     OutValue := '';
-    if AContext.URL <> '/IWSYXHIS' then
+    if AContext.URL <> '/IWSYXDSVR' then
     begin
       OutValue := stringreplace(cstHTMLBegin + '<p>404£¡ HTTP NOT FOUND£¡</p>' +
         cstHTMLEnd, 'text-align:Left;', 'text-align:Center;', []);

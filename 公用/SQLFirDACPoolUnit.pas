@@ -134,7 +134,7 @@ begin
     UserName := DeCode(AINI.ReadString('DB', 'UserName', ''));
     PassWord := DeCode(AINI.ReadString('DB', 'PassWord', ''));
     PoolNum := AINI.ReadInteger('YxDServer', 'Pools', 32);
-    BDEBUG :=  AINI.ReadBool('YxDServer', 'SQLDEBUG', True);
+    BDEBUG :=  AINI.ReadBool('YxDServer', 'SQLDEBUG', False);
   finally
     Freeandnil(AINI);
   end;
@@ -156,7 +156,6 @@ end;
 constructor TDACon.Create(DAConfig: TDAConfig);
 var
   str: string;
-  Path:string;
 begin
   str := 'DriverID=MSSQL;Server=' + DAConfig.DBServer + ';Database=' + DAConfig.DataBase
     + ';User_name=' + DAConfig.UserName + ';Password=' + DAConfig.PassWord +
@@ -177,10 +176,7 @@ begin
     //////////SQL»’÷æ…Ë÷√/////////
     Params.add('MonitorBy=FlatFile');
     Params.add('ConnectionIntf.Tracing=True');
-    Path := ExtractFileDir(ParamStr(0)) + '\YxDServerSQLlog';
-   { if not DirectoryExists(Path) then
-      CreateDir(Path); }
-    FileName :='';//Path+ '\SQLog'+FormatDateTime('YYYY-MM-DD HH', now)+'.Txt';
+    FileName :='';
     EventKinds := [ekcmdExecute];
     FileAppend := True;
     FileEncoding := ecANSI;

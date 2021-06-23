@@ -102,13 +102,15 @@ implementation
 {$R *.dfm}
 procedure TMainForm.SetDACManager;
 var
-  DBServer,DataBase,UserName,PassWord,Path:string;
+  DBServer,DataBase,UserName,PassWord:string;
+  Pools:Integer;
 begin
    //读取数据库配置
     DBServer := DeCode(AINI.ReadString('DB', 'Server', ''));
     DataBase := DeCode(AINI.ReadString('DB', 'DataBase', ''));
     UserName := DeCode(AINI.ReadString('DB', 'UserName', ''));
     PassWord := DeCode(AINI.ReadString('DB', 'PassWord', ''));
+    Pools := Aini.ReadInteger('YxDServer','Pools',32);
     //*****初始化*****
     oParams := TStringList.Create;
     //********* 连接池
@@ -131,7 +133,7 @@ begin
     //  毫秒
     oParams.Add('POOL_ExpireTimeout=600000');
     //最多连接数
-    oParams.Add('POOL_MaximumItems=60');
+    oParams.Add('POOL_MaximumItems='+IntToStr(Pools));
     oParams.Add('Pooled=True');
     oParams.Add('MonitorBy=FlatFile');
     oParams.Add('ConnectionIntf.Tracing=True');
@@ -250,7 +252,7 @@ begin
   BeginServer := True;
   BtnStart.Enabled := False;
   BtnStop.Enabled := True;
-  //SetDACManager;
+  SetDACManager;
 end;
 
 procedure TMainForm.StopSvr;
