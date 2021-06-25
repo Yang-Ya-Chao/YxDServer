@@ -179,13 +179,13 @@ begin
     FileName :='';
     EventKinds := [ekcmdExecute];
     FileAppend := True;
-    FileEncoding := ecANSI;
     ShowTraces := False;
     OnOutput := nil;
     OnOutput := FDMFFOutput;
     ///////////////////////////
     try
       Connected := True;
+      FileEncoding := ecANSI;
       Tracing := DAConfig.BDEBUG;
     except
       raise Exception.Create('数据库连接失败！请检查数据库配置或者网络链接！');

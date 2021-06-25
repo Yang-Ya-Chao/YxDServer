@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{419C815F-372F-45A8-BA68-71F48517C8FB}</ProjectGuid>
+        <ProjectGuid>{DB253236-774D-4FF6-8FA5-ED05A7030C45}</ProjectGuid>
         <MainSource>YxDServer.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>

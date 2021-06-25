@@ -252,7 +252,7 @@ begin
   BeginServer := True;
   BtnStart.Enabled := False;
   BtnStop.Enabled := True;
-  SetDACManager;
+  //SetDACManager;
 end;
 
 procedure TMainForm.StopSvr;

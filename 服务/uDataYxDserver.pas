@@ -55,8 +55,8 @@ end;
 
 constructor TYxDSvr.Create(AOwner: TComponent);
 begin
-  //DATABASE := DACPool.GetCon(DAConfig);
-  DATABASE:= TFDConnection.Create(nil);
+  DATABASE := DACPool.GetCon(DAConfig);
+ { DATABASE:= TFDConnection.Create(nil);
   with DATABASE do
   begin
     ConnectionDefName := 'MSSQL_Pooled';
@@ -65,15 +65,15 @@ begin
     except
       raise Exception.Create('数据库连接失败！请检查数据库配置或者网络链接！');
     end;
-  end;
+  end;   }
   FQry:=TFDQuery.Create(nil);
 end;
 
 destructor TYxDSvr.Destroy;
 begin
-  //DACPool.PutCon(DATABASE);
-  if Assigned(DATABASE) then
-    FreeAndNil(DATABASE);
+  DACPool.PutCon(DATABASE);
+  {if Assigned(DATABASE) then
+    FreeAndNil(DATABASE); }
   if Assigned(FQry) then
     FreeAndNil(FQry);
   inherited;
