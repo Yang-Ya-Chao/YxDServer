@@ -178,14 +178,16 @@ begin
     Params.add('ConnectionIntf.Tracing=True');
     FileName :='';
     EventKinds := [ekcmdExecute];
-    FileAppend := True;
     ShowTraces := False;
-    OnOutput := nil;
     OnOutput := FDMFFOutput;
+    try
+      FileEncoding := ecANSI;
+    finally
+      raise Exception.Create('正在初始化SQL跟踪日志！请重新提交数据！');
+    end;
     ///////////////////////////
     try
       Connected := True;
-      FileEncoding := ecANSI;
       Tracing := DAConfig.BDEBUG;
     except
       raise Exception.Create('数据库连接失败！请检查数据库配置或者网络链接！');
