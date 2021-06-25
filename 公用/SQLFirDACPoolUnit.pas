@@ -182,7 +182,7 @@ begin
     OnOutput := FDMFFOutput;
     try
       FileEncoding := ecANSI;
-    finally
+    Except
       raise Exception.Create('正在初始化SQL跟踪日志！请重新提交数据！');
     end;
     ///////////////////////////
